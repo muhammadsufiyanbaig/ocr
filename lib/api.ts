@@ -1,4 +1,4 @@
-const API_BASE_URL = "http://127.0.0.1:4444"
+const API_BASE_URL = "https://ds-ocr-project.vercel.app/"
 
 export interface AccountApplication {
   id?: number
