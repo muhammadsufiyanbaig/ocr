@@ -97,7 +97,21 @@ export async function createApplication(
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   })
-  if (!res.ok) throw new Error("Failed to create application")
+  if (!res.ok) {
+    const errorData = await res.json().catch(() => null)
+    console.error("API Error:", res.status, errorData)
+    if (errorData?.detail) {
+      // FastAPI validation error format
+      if (Array.isArray(errorData.detail)) {
+        const messages = errorData.detail.map((err: { loc: string[], msg: string }) => 
+          `${err.loc.join('.')}: ${err.msg}`
+        ).join(', ')
+        throw new Error(`Validation Error: ${messages}`)
+      }
+      throw new Error(errorData.detail)
+    }
+    throw new Error(`Failed to create application (${res.status})`)
+  }
   return res.json()
 }
 
