@@ -4,6 +4,7 @@ import type React from "react"
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
+import { toast } from "sonner"
 import { type AccountApplication, createApplication, updateApplication } from "@/lib/api"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -21,7 +22,6 @@ interface ApplicationFormProps {
 export function ApplicationForm({ initialData, isEditing = false }: ApplicationFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError] = useState<string | null>(null)
 
   const [formData, setFormData] = useState<Partial<AccountApplication>>({
     title_of_account: initialData?.title_of_account ?? "",
@@ -103,7 +103,6 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-    setError(null)
 
     try {
       const cleanedData = cleanFormData(formData)
@@ -113,13 +112,22 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
           ...initialData,
           ...cleanedData,
         } as AccountApplication)
+        toast.success("Application Updated", {
+          description: "The application has been successfully updated.",
+        })
       } else {
         await createApplication(cleanedData as Omit<AccountApplication, "id" | "account_no" | "iban">)
+        toast.success("Application Created", {
+          description: "The new application has been successfully created.",
+        })
       }
       router.push("/applications")
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An error occurred")
+      const errorMessage = err instanceof Error ? err.message : "An error occurred"
+      toast.error("Operation Failed", {
+        description: errorMessage,
+      })
     } finally {
       setIsSubmitting(false)
     }
@@ -127,11 +135,6 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-          {error}
-        </div>
-      )}
 
       {/* Personal Information */}
       <Card className="bg-card border-border glow-card">

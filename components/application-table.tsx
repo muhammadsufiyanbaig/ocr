@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import Link from "next/link"
+import { toast } from "sonner"
 import { type AccountApplication, deleteApplication } from "@/lib/api"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
@@ -34,9 +35,15 @@ export function ApplicationsTable({ applications, onDelete }: ApplicationsTableP
     setIsDeleting(true)
     try {
       await deleteApplication(deleteId)
+      toast.success("Application Deleted", {
+        description: "The application has been successfully deleted.",
+      })
       onDelete?.()
     } catch (error) {
       console.error("Failed to delete:", error)
+      toast.error("Delete Failed", {
+        description: error instanceof Error ? error.message : "Failed to delete application.",
+      })
     } finally {
       setIsDeleting(false)
       setDeleteId(null)

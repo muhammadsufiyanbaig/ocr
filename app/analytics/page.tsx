@@ -2,6 +2,7 @@
 
 import { useState } from "react"
 import useSWR from "swr"
+import { toast } from "sonner"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
 import { AnalyticsCharts } from "@/components/analytics-charts"
@@ -13,6 +14,19 @@ import { Button } from "@/components/ui/button"
 export default function AnalyticsPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { data: applications, isLoading, error, mutate } = useSWR("all-applications", getAllApplications)
+
+  const handleRefresh = async () => {
+    try {
+      await mutate()
+      toast.success("Data Refreshed", {
+        description: "Analytics data has been updated.",
+      })
+    } catch {
+      toast.error("Refresh Failed", {
+        description: "Failed to refresh analytics data.",
+      })
+    }
+  }
 
   return (
     <div className="flex min-h-screen">
@@ -41,7 +55,7 @@ export default function AnalyticsPage() {
                   </p>
                 </div>
                 <Button 
-                  onClick={() => mutate()}
+                  onClick={handleRefresh}
                   variant="outline" 
                   className="border-violet-500/30 text-violet-400 hover:bg-violet-500/10 rounded-xl"
                 >
