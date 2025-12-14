@@ -101,14 +101,16 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
       )}
 
       {/* Personal Information */}
-      <Card className="bg-card border-border">
+      <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <User className="h-5 w-5 text-primary" />
-          <CardTitle className="text-card-foreground">Personal Information</CardTitle>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <User className="h-5 w-5 text-primary" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Personal Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
-            <Label htmlFor="title_of_account" className="text-foreground">
+            <Label htmlFor="title_of_account" className="text-foreground text-sm">
               Title of Account *
             </Label>
             <Input
@@ -117,11 +119,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               onChange={(e) => updateField("title_of_account", e.target.value.toUpperCase())}
               placeholder="JOHN DOE"
               required
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="name" className="text-foreground">
+            <Label htmlFor="name" className="text-foreground text-sm">
               Name (as per CNIC) *
             </Label>
             <Input
@@ -130,11 +132,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               onChange={(e) => updateField("name", e.target.value.toUpperCase())}
               placeholder="JOHN DOE"
               required
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="name_on_card" className="text-foreground">
+            <Label htmlFor="name_on_card" className="text-foreground text-sm">
               Name on Card
             </Label>
             <Input
@@ -142,11 +144,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.name_on_card}
               onChange={(e) => updateField("name_on_card", e.target.value.toUpperCase())}
               placeholder="JOHN DOE"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cnic_no" className="text-foreground">
+            <Label htmlFor="cnic_no" className="text-foreground text-sm">
               CNIC Number *
             </Label>
             <Input
@@ -155,11 +157,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               onChange={(e) => updateField("cnic_no", e.target.value)}
               placeholder="12345-1234567-1"
               required
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="fathers_husbands_name" className="text-foreground">
+            <Label htmlFor="fathers_husbands_name" className="text-foreground text-sm">
               {"Father's/Husband's Name"}
             </Label>
             <Input
@@ -167,11 +169,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.fathers_husbands_name}
               onChange={(e) => updateField("fathers_husbands_name", e.target.value.toUpperCase())}
               placeholder="JAMES DOE"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="mothers_name" className="text-foreground">
+            <Label htmlFor="mothers_name" className="text-foreground text-sm">
               {"Mother's Name"}
             </Label>
             <Input
@@ -179,13 +181,13 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.mothers_name}
               onChange={(e) => updateField("mothers_name", e.target.value.toUpperCase())}
               placeholder="JANE DOE"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-foreground">Gender</Label>
+            <Label className="text-foreground text-sm">Gender</Label>
             <Select value={formData.gender} onValueChange={(value) => updateField("gender", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
                 <SelectValue placeholder="Select gender" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
@@ -196,9 +198,9 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             </Select>
           </div>
           <div className="space-y-2">
-            <Label className="text-foreground">Marital Status</Label>
+            <Label className="text-foreground text-sm">Marital Status</Label>
             <Select value={formData.marital_status} onValueChange={(value) => updateField("marital_status", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
@@ -210,7 +212,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="nationality" className="text-foreground">
+            <Label htmlFor="nationality" className="text-foreground text-sm">
               Nationality
             </Label>
             <Input
@@ -218,11 +220,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.nationality}
               onChange={(e) => updateField("nationality", e.target.value.toUpperCase())}
               placeholder="PAKISTANI"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="place_of_birth" className="text-foreground">
+            <Label htmlFor="place_of_birth" className="text-foreground text-sm">
               Place of Birth
             </Label>
             <Input
@@ -230,11 +232,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.place_of_birth}
               onChange={(e) => updateField("place_of_birth", e.target.value.toUpperCase())}
               placeholder="KARACHI"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="date_of_birth" className="text-foreground">
+            <Label htmlFor="date_of_birth" className="text-foreground text-sm">
               Date of Birth
             </Label>
             <Input
@@ -242,11 +244,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               type="date"
               value={formData.date_of_birth}
               onChange={(e) => updateField("date_of_birth", e.target.value)}
-              className="bg-input border-border text-foreground"
+              className="bg-input border-border text-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="cnic_expiry_date" className="text-foreground">
+            <Label htmlFor="cnic_expiry_date" className="text-foreground text-sm">
               CNIC Expiry Date
             </Label>
             <Input
@@ -254,21 +256,23 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               type="date"
               value={formData.cnic_expiry_date}
               onChange={(e) => updateField("cnic_expiry_date", e.target.value)}
-              className="bg-input border-border text-foreground"
+              className="bg-input border-border text-foreground rounded-xl h-11"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Address Information */}
-      <Card className="bg-card border-border">
+      <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <MapPin className="h-5 w-5 text-primary" />
-          <CardTitle className="text-card-foreground">Address Information</CardTitle>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <MapPin className="h-5 w-5 text-primary" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Address Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2">
-          <div className="space-y-2 md:col-span-2">
-            <Label htmlFor="house_no_block_street" className="text-foreground">
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2">
+          <div className="space-y-2 sm:col-span-2">
+            <Label htmlFor="house_no_block_street" className="text-foreground text-sm">
               House No / Block / Street
             </Label>
             <Input
@@ -276,11 +280,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.house_no_block_street}
               onChange={(e) => updateField("house_no_block_street", e.target.value.toUpperCase())}
               placeholder="HOUSE 123, BLOCK A, STREET 5"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="area_location" className="text-foreground">
+            <Label htmlFor="area_location" className="text-foreground text-sm">
               Area / Location
             </Label>
             <Input
@@ -288,11 +292,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.area_location}
               onChange={(e) => updateField("area_location", e.target.value.toUpperCase())}
               placeholder="GULSHAN"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="city" className="text-foreground">
+            <Label htmlFor="city" className="text-foreground text-sm">
               City
             </Label>
             <Input
@@ -300,11 +304,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.city}
               onChange={(e) => updateField("city", e.target.value.toUpperCase())}
               placeholder="KARACHI"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="postal_code" className="text-foreground">
+            <Label htmlFor="postal_code" className="text-foreground text-sm">
               Postal Code
             </Label>
             <Input
@@ -313,16 +317,16 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               onChange={(e) => updateField("postal_code", e.target.value)}
               placeholder="75300"
               maxLength={5}
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label className="text-foreground">Residential Status</Label>
+            <Label className="text-foreground text-sm">Residential Status</Label>
             <Select
               value={formData.residential_status}
               onValueChange={(value) => updateField("residential_status", value)}
             >
-              <SelectTrigger className="bg-input border-border text-foreground">
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
                 <SelectValue placeholder="Select status" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
@@ -334,7 +338,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="residing_since" className="text-foreground">
+            <Label htmlFor="residing_since" className="text-foreground text-sm">
               Residing Since
             </Label>
             <Input
@@ -342,23 +346,25 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               type="date"
               value={formData.residing_since}
               onChange={(e) => updateField("residing_since", e.target.value)}
-              className="bg-input border-border text-foreground"
+              className="bg-input border-border text-foreground rounded-xl h-11"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Occupation & Financial */}
-      <Card className="bg-card border-border">
+      <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <Briefcase className="h-5 w-5 text-primary" />
-          <CardTitle className="text-card-foreground">Occupation & Financial Information</CardTitle>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Briefcase className="h-5 w-5 text-primary" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Occupation & Financial Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
-            <Label className="text-foreground">Occupation</Label>
+            <Label className="text-foreground text-sm">Occupation</Label>
             <Select value={formData.occupation} onValueChange={(value) => updateField("occupation", value)}>
-              <SelectTrigger className="bg-input border-border text-foreground">
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
                 <SelectValue placeholder="Select occupation" />
               </SelectTrigger>
               <SelectContent className="bg-popover border-border">
@@ -372,7 +378,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             </Select>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="purpose_of_account" className="text-foreground">
+            <Label htmlFor="purpose_of_account" className="text-foreground text-sm">
               Purpose of Account
             </Label>
             <Input
@@ -380,11 +386,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.purpose_of_account}
               onChange={(e) => updateField("purpose_of_account", e.target.value.toUpperCase())}
               placeholder="SALARY"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="source_of_income" className="text-foreground">
+            <Label htmlFor="source_of_income" className="text-foreground text-sm">
               Source of Income
             </Label>
             <Input
@@ -392,11 +398,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.source_of_income}
               onChange={(e) => updateField("source_of_income", e.target.value.toUpperCase())}
               placeholder="EMPLOYMENT"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="expected_monthly_turnover_dr" className="text-foreground">
+            <Label htmlFor="expected_monthly_turnover_dr" className="text-foreground text-sm">
               Expected Monthly Debit (Rs)
             </Label>
             <Input
@@ -404,11 +410,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               type="number"
               value={formData.expected_monthly_turnover_dr}
               onChange={(e) => updateField("expected_monthly_turnover_dr", Number.parseFloat(e.target.value) || 0)}
-              className="bg-input border-border text-foreground"
+              className="bg-input border-border text-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="expected_monthly_turnover_cr" className="text-foreground">
+            <Label htmlFor="expected_monthly_turnover_cr" className="text-foreground text-sm">
               Expected Monthly Credit (Rs)
             </Label>
             <Input
@@ -416,21 +422,23 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               type="number"
               value={formData.expected_monthly_turnover_cr}
               onChange={(e) => updateField("expected_monthly_turnover_cr", Number.parseFloat(e.target.value) || 0)}
-              className="bg-input border-border text-foreground"
+              className="bg-input border-border text-foreground rounded-xl h-11"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Next of Kin */}
-      <Card className="bg-card border-border">
+      <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <Users className="h-5 w-5 text-primary" />
-          <CardTitle className="text-card-foreground">Next of Kin Information</CardTitle>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Users className="h-5 w-5 text-primary" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Next of Kin Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_name" className="text-foreground">
+            <Label htmlFor="next_of_kin_name" className="text-foreground text-sm">
               Name
             </Label>
             <Input
@@ -438,11 +446,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_name}
               onChange={(e) => updateField("next_of_kin_name", e.target.value.toUpperCase())}
               placeholder="JANE DOE"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_relation" className="text-foreground">
+            <Label htmlFor="next_of_kin_relation" className="text-foreground text-sm">
               Relation (S/W/D/O)
             </Label>
             <Input
@@ -450,11 +458,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_relation}
               onChange={(e) => updateField("next_of_kin_relation", e.target.value.toUpperCase())}
               placeholder="S/O"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_cnic" className="text-foreground">
+            <Label htmlFor="next_of_kin_cnic" className="text-foreground text-sm">
               CNIC
             </Label>
             <Input
@@ -462,11 +470,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_cnic}
               onChange={(e) => updateField("next_of_kin_cnic", e.target.value)}
               placeholder="12345-1234567-2"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_relationship" className="text-foreground">
+            <Label htmlFor="next_of_kin_relationship" className="text-foreground text-sm">
               Relationship
             </Label>
             <Input
@@ -474,11 +482,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_relationship}
               onChange={(e) => updateField("next_of_kin_relationship", e.target.value.toUpperCase())}
               placeholder="MOTHER"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_contact_no" className="text-foreground">
+            <Label htmlFor="next_of_kin_contact_no" className="text-foreground text-sm">
               Contact Number
             </Label>
             <Input
@@ -486,11 +494,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_contact_no}
               onChange={(e) => updateField("next_of_kin_contact_no", e.target.value)}
               placeholder="03001234567"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="next_of_kin_email" className="text-foreground">
+            <Label htmlFor="next_of_kin_email" className="text-foreground text-sm">
               Email
             </Label>
             <Input
@@ -499,11 +507,11 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_email}
               onChange={(e) => updateField("next_of_kin_email", e.target.value)}
               placeholder="jane.doe@email.com"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
-          <div className="space-y-2 md:col-span-2 lg:col-span-3">
-            <Label htmlFor="next_of_kin_address" className="text-foreground">
+          <div className="space-y-2 sm:col-span-2 lg:col-span-3">
+            <Label htmlFor="next_of_kin_address" className="text-foreground text-sm">
               Address
             </Label>
             <Input
@@ -511,87 +519,96 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               value={formData.next_of_kin_address}
               onChange={(e) => updateField("next_of_kin_address", e.target.value.toUpperCase())}
               placeholder="HOUSE 456, BLOCK B"
-              className="bg-input border-border text-foreground placeholder:text-muted-foreground"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
         </CardContent>
       </Card>
 
       {/* Services */}
-      <Card className="bg-card border-border">
+      <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <Smartphone className="h-5 w-5 text-primary" />
-          <CardTitle className="text-card-foreground">Banking Services</CardTitle>
+          <div className="p-2 rounded-lg bg-primary/10">
+            <Smartphone className="h-5 w-5 text-primary" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Banking Services</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            <div className="flex items-center space-x-2">
+          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="internet_banking"
                 checked={formData.internet_banking}
                 onCheckedChange={(checked) => updateField("internet_banking", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="internet_banking" className="cursor-pointer text-foreground">
+              <Label htmlFor="internet_banking" className="cursor-pointer text-foreground text-sm">
                 Internet Banking
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="mobile_banking"
                 checked={formData.mobile_banking}
                 onCheckedChange={(checked) => updateField("mobile_banking", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="mobile_banking" className="cursor-pointer text-foreground">
+              <Label htmlFor="mobile_banking" className="cursor-pointer text-foreground text-sm">
                 Mobile Banking
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="check_book"
                 checked={formData.check_book}
                 onCheckedChange={(checked) => updateField("check_book", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="check_book" className="cursor-pointer text-foreground">
+              <Label htmlFor="check_book" className="cursor-pointer text-foreground text-sm">
                 Check Book
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="sms_alerts"
                 checked={formData.sms_alerts}
                 onCheckedChange={(checked) => updateField("sms_alerts", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="sms_alerts" className="cursor-pointer text-foreground">
+              <Label htmlFor="sms_alerts" className="cursor-pointer text-foreground text-sm">
                 SMS Alerts
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="card_type_gold"
                 checked={formData.card_type_gold}
                 onCheckedChange={(checked) => updateField("card_type_gold", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="card_type_gold" className="cursor-pointer text-foreground">
+              <Label htmlFor="card_type_gold" className="cursor-pointer text-foreground text-sm">
                 Gold Card
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="card_type_classic"
                 checked={formData.card_type_classic}
                 onCheckedChange={(checked) => updateField("card_type_classic", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="card_type_classic" className="cursor-pointer text-foreground">
+              <Label htmlFor="card_type_classic" className="cursor-pointer text-foreground text-sm">
                 Classic Card
               </Label>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="zakat_deduction"
                 checked={formData.zakat_deduction}
                 onCheckedChange={(checked) => updateField("zakat_deduction", checked)}
+                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
               />
-              <Label htmlFor="zakat_deduction" className="cursor-pointer text-foreground">
+              <Label htmlFor="zakat_deduction" className="cursor-pointer text-foreground text-sm">
                 Zakat Deduction
               </Label>
             </div>
@@ -600,19 +617,19 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
       </Card>
 
       {/* Submit */}
-      <div className="flex justify-end gap-4">
+      <div className="flex flex-col sm:flex-row justify-end gap-3 pt-4">
         <Button
           type="button"
           variant="outline"
           onClick={() => router.back()}
-          className="border-border text-foreground hover:bg-secondary"
+          className="border-border text-foreground hover:bg-secondary rounded-xl h-11 px-6 order-2 sm:order-1"
         >
           Cancel
         </Button>
         <Button
           type="submit"
           disabled={isSubmitting}
-          className="bg-primary text-primary-foreground hover:bg-primary/90"
+          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-11 px-8 glow-primary order-1 sm:order-2"
         >
           {isSubmitting ? (
             <>

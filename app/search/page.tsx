@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
 import { ApplicationsTable } from "@/components/application-table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -19,11 +20,12 @@ import {
   searchByCity,
   searchByAccountType,
 } from "@/lib/api"
-import { Search, CreditCard, Award as IdCard, Building, MapPin, Loader2 } from "lucide-react"
+import { Search, CreditCard, Award as IdCard, Building, MapPin, Loader2, Sparkles } from "lucide-react"
 
 type SearchType = "cnic" | "account_number" | "iban" | "city" | "account_type"
 
 export default function SearchPage() {
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const [searchType, setSearchType] = useState<SearchType>("cnic")
   const [searchValue, setSearchValue] = useState("")
   const [accountType, setAccountType] = useState<string>("")
@@ -125,108 +127,123 @@ export default function SearchPage() {
   ]
 
   return (
-    <div className="min-h-screen">
-      <Header title="Search Applications" description="Search for account applications by various criteria" />
-      <div className="p-6">
-        <Card className="bg-card border-border">
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-card-foreground">
-              <Search className="h-5 w-5 text-primary" />
-              Search Criteria
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <Tabs
-              value={searchType}
-              onValueChange={(v) => {
-                setSearchType(v as SearchType)
-                setSearchValue("")
-                setAccountType("")
-                setError(null)
-                setResults([])
-                setHasSearched(false)
-              }}
-            >
-              <TabsList className="mb-6 grid w-full grid-cols-5 bg-secondary">
-                {searchConfigs.map((config) => {
-                  const Icon = config.icon
-                  return (
-                    <TabsTrigger
-                      key={config.value}
-                      value={config.value}
-                      className="flex items-center gap-2 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                    >
-                      <Icon className="h-4 w-4" />
-                      <span className="hidden sm:inline">{config.label}</span>
-                    </TabsTrigger>
-                  )
-                })}
-              </TabsList>
-
-              {searchConfigs.map((config) => (
-                <TabsContent key={config.value} value={config.value}>
-                  <div className="space-y-4">
-                    <p className="text-sm text-muted-foreground">{config.description}</p>
-                    <div className="flex gap-4">
-                      {config.value === "account_type" ? (
-                        <div className="flex-1">
-                          <Label className="sr-only">Account Type</Label>
-                          <Select value={accountType} onValueChange={setAccountType}>
-                            <SelectTrigger className="bg-input border-border text-foreground">
-                              <SelectValue placeholder="Select account type" />
-                            </SelectTrigger>
-                            <SelectContent className="bg-popover border-border">
-                              <SelectItem value="CURRENT">Current</SelectItem>
-                              <SelectItem value="SAVINGS">Savings</SelectItem>
-                              <SelectItem value="AHU_LAT">Ahu Lat</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      ) : (
-                        <div className="flex-1">
-                          <Label className="sr-only">{config.label}</Label>
-                          <Input
-                            value={searchValue}
-                            onChange={(e) => setSearchValue(e.target.value)}
-                            onKeyDown={handleKeyDown}
-                            placeholder={config.placeholder}
-                            className="bg-input border-border text-foreground placeholder:text-muted-foreground"
-                          />
-                        </div>
-                      )}
-                      <Button
-                        onClick={handleSearch}
-                        disabled={isSearching}
-                        className="bg-primary text-primary-foreground hover:bg-primary/90"
+    <div className="flex min-h-screen">
+      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <main className="flex-1 transition-all duration-300 md:pl-72">
+        <Header 
+          title="Search Applications" 
+          description="Search for account applications by various criteria"
+          onMenuClick={() => setSidebarOpen(true)}
+        />
+        <div className="p-4 md:p-6">
+          <Card className="bg-card border-border glow-card">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-card-foreground">
+                <Sparkles className="h-5 w-5 text-primary" />
+                Search Criteria
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Tabs
+                value={searchType}
+                onValueChange={(v) => {
+                  setSearchType(v as SearchType)
+                  setSearchValue("")
+                  setAccountType("")
+                  setError(null)
+                  setResults([])
+                  setHasSearched(false)
+                }}
+              >
+                <TabsList className="mb-6 grid w-full grid-cols-5 bg-secondary rounded-xl h-auto p-1">
+                  {searchConfigs.map((config) => {
+                    const Icon = config.icon
+                    return (
+                      <TabsTrigger
+                        key={config.value}
+                        value={config.value}
+                        className="flex items-center justify-center gap-2 py-2.5 rounded-lg data-[state=active]:bg-primary data-[state=active]:text-primary-foreground transition-all"
                       >
-                        {isSearching ? (
-                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Icon className="h-4 w-4" />
+                        <span className="hidden md:inline text-xs">{config.label}</span>
+                      </TabsTrigger>
+                    )
+                  })}
+                </TabsList>
+
+                {searchConfigs.map((config) => (
+                  <TabsContent key={config.value} value={config.value}>
+                    <div className="space-y-4">
+                      <p className="text-sm text-muted-foreground">{config.description}</p>
+                      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
+                        {config.value === "account_type" ? (
+                          <div className="flex-1">
+                            <Label className="sr-only">Account Type</Label>
+                            <Select value={accountType} onValueChange={setAccountType}>
+                              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-12">
+                                <SelectValue placeholder="Select account type" />
+                              </SelectTrigger>
+                              <SelectContent className="bg-popover border-border">
+                                <SelectItem value="CURRENT">Current</SelectItem>
+                                <SelectItem value="SAVINGS">Savings</SelectItem>
+                                <SelectItem value="AHU_LAT">Ahu Lat</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
                         ) : (
-                          <Search className="mr-2 h-4 w-4" />
+                          <div className="flex-1">
+                            <Label className="sr-only">{config.label}</Label>
+                            <Input
+                              value={searchValue}
+                              onChange={(e) => setSearchValue(e.target.value)}
+                              onKeyDown={handleKeyDown}
+                              placeholder={config.placeholder}
+                              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-12"
+                            />
+                          </div>
                         )}
-                        Search
-                      </Button>
+                        <Button
+                          onClick={handleSearch}
+                          disabled={isSearching}
+                          className="bg-primary text-primary-foreground hover:bg-primary/90 rounded-xl h-12 px-6"
+                        >
+                          {isSearching ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Search className="mr-2 h-4 w-4" />
+                          )}
+                          Search
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </TabsContent>
-              ))}
-            </Tabs>
+                  </TabsContent>
+                ))}
+              </Tabs>
 
-            {error && (
-              <div className="mt-4 rounded-lg border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
-                {error}
+              {error && (
+                <div className="mt-4 rounded-xl border border-destructive/50 bg-destructive/10 p-4 text-sm text-destructive">
+                  {error}
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          {hasSearched && (
+            <div className="mt-6">
+              <div className="flex items-center gap-2 mb-4">
+                <Search className="h-5 w-5 text-primary" />
+                <h2 className="text-lg font-semibold text-foreground">
+                  Search Results 
+                  <span className="ml-2 text-sm font-normal text-muted-foreground">
+                    ({results.length} found)
+                  </span>
+                </h2>
               </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {hasSearched && (
-          <div className="mt-6">
-            <h2 className="mb-4 text-lg font-semibold text-foreground">Search Results ({results.length})</h2>
-            <ApplicationsTable applications={results} />
-          </div>
-        )}
-      </div>
+              <ApplicationsTable applications={results} />
+            </div>
+          )}
+        </div>
+      </main>
     </div>
   )
 }

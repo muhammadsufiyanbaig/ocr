@@ -3,9 +3,14 @@
 import { useState } from "react"
 import { Sidebar } from "@/components/sidebar"
 import { Header } from "@/components/header"
-import { ApplicationForm } from "@/components/application-form"
 
-export default function NewApplicationPage() {
+interface AppShellProps {
+  children: React.ReactNode
+  title: string
+  description?: string
+}
+
+export function AppShell({ children, title, description }: AppShellProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
   return (
@@ -13,13 +18,11 @@ export default function NewApplicationPage() {
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       <main className="flex-1 transition-all duration-300 md:pl-72">
         <Header 
-          title="New Application" 
-          description="Create a new bank account application"
+          title={title} 
+          description={description}
           onMenuClick={() => setSidebarOpen(true)}
         />
-        <div className="p-4 md:p-6">
-          <ApplicationForm />
-        </div>
+        {children}
       </main>
     </div>
   )
