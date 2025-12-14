@@ -70,7 +70,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
   }
 
   // Convert YYYY-MM-DD to DD MM YY format
-  const formatDateForApi = (dateStr: string | undefined): string | null => {
+  const formatDateForApi = (dateStr: string | undefined | null): string | null => {
     if (!dateStr) return null
     const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/)
     if (match) {
@@ -81,19 +81,22 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
   }
 
   // Clean empty strings to null for optional fields
-  const cleanFormData = (data: Partial<AccountApplication>) => {
-    const cleaned: Record<string, unknown> = {}
+  const cleanFormData = (data: Partial<AccountApplication>): Partial<AccountApplication> => {
+    const cleaned: Partial<AccountApplication> = {}
+    
     for (const [key, value] of Object.entries(data)) {
       if (value === "" || value === undefined) {
-        cleaned[key] = null
+        (cleaned as Record<string, unknown>)[key] = null
       } else {
-        cleaned[key] = value
+        (cleaned as Record<string, unknown>)[key] = value
       }
     }
+    
     // Convert date fields to API format
-    cleaned.date_of_birth = formatDateForApi(data.date_of_birth)
-    cleaned.cnic_expiry_date = formatDateForApi(data.cnic_expiry_date)
-    cleaned.residing_since = formatDateForApi(data.residing_since)
+    cleaned.date_of_birth = formatDateForApi(data.date_of_birth) ?? undefined
+    cleaned.cnic_expiry_date = formatDateForApi(data.cnic_expiry_date) ?? undefined
+    cleaned.residing_since = formatDateForApi(data.residing_since) ?? undefined
+    
     return cleaned
   }
 
@@ -111,7 +114,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
           ...cleanedData,
         } as AccountApplication)
       } else {
-        await createApplication(cleanedData as AccountApplication)
+        await createApplication(cleanedData as Omit<AccountApplication, "id" | "account_no" | "iban">)
       }
       router.push("/applications")
       router.refresh()
