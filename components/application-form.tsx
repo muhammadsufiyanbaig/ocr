@@ -69,19 +69,49 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
+  // Convert YYYY-MM-DD to DD MM YY format
+  const formatDateForApi = (dateStr: string | undefined): string | null => {
+    if (!dateStr) return null
+    const match = dateStr.match(/^(\d{4})-(\d{2})-(\d{2})$/)
+    if (match) {
+      const [, year, month, day] = match
+      return `${day} ${month} ${year.slice(-2)}`
+    }
+    return dateStr // Already in correct format or different format
+  }
+
+  // Clean empty strings to null for optional fields
+  const cleanFormData = (data: Partial<AccountApplication>) => {
+    const cleaned: Record<string, unknown> = {}
+    for (const [key, value] of Object.entries(data)) {
+      if (value === "" || value === undefined) {
+        cleaned[key] = null
+      } else {
+        cleaned[key] = value
+      }
+    }
+    // Convert date fields to API format
+    cleaned.date_of_birth = formatDateForApi(data.date_of_birth)
+    cleaned.cnic_expiry_date = formatDateForApi(data.cnic_expiry_date)
+    cleaned.residing_since = formatDateForApi(data.residing_since)
+    return cleaned
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
     setError(null)
 
     try {
+      const cleanedData = cleanFormData(formData)
+      
       if (isEditing && initialData?.id) {
         await updateApplication(initialData.id, {
           ...initialData,
-          ...formData,
+          ...cleanedData,
         } as AccountApplication)
       } else {
-        await createApplication(formData as AccountApplication)
+        await createApplication(cleanedData as AccountApplication)
       }
       router.push("/applications")
       router.refresh()
