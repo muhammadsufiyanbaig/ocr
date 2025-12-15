@@ -12,6 +12,7 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { ApplicationResponseModal } from "@/components/application-response-modal"
 import { Loader2, Save, User, MapPin, Briefcase, Users, Smartphone } from "lucide-react"
 
 interface ApplicationFormProps {
@@ -22,6 +23,8 @@ interface ApplicationFormProps {
 export function ApplicationForm({ initialData, isEditing = false }: ApplicationFormProps) {
   const router = useRouter()
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [showResponseModal, setShowResponseModal] = useState(false)
+  const [createdApplication, setCreatedApplication] = useState<AccountApplication | null>(null)
 
   const [formData, setFormData] = useState<Partial<AccountApplication>>({
     title_of_account: initialData?.title_of_account ?? "",
@@ -100,6 +103,13 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     return cleaned
   }
 
+  const handleModalClose = () => {
+    setShowResponseModal(false)
+    setCreatedApplication(null)
+    router.push("/applications")
+    router.refresh()
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
@@ -115,14 +125,16 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
         toast.success("Application Updated", {
           description: "The application has been successfully updated.",
         })
+        router.push("/applications")
+        router.refresh()
       } else {
-        await createApplication(cleanedData as Omit<AccountApplication, "id" | "account_no" | "iban">)
+        const response = await createApplication(cleanedData as Omit<AccountApplication, "id" | "account_no" | "iban">)
+        setCreatedApplication(response)
+        setShowResponseModal(true)
         toast.success("Application Created", {
           description: "The new application has been successfully created.",
         })
       }
-      router.push("/applications")
-      router.refresh()
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : "An error occurred"
       toast.error("Operation Failed", {
@@ -134,6 +146,12 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
   }
 
   return (
+    <>
+    <ApplicationResponseModal 
+      isOpen={showResponseModal}
+      onClose={handleModalClose}
+      data={createdApplication}
+    />
     <form onSubmit={handleSubmit} className="space-y-6">
 
       {/* Personal Information */}
@@ -681,5 +699,6 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
         </Button>
       </div>
     </form>
+    </>
   )
 }
