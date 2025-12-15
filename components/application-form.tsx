@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ApplicationResponseModal } from "@/components/application-response-modal"
-import { Loader2, Save, User, MapPin, Briefcase, Users, Smartphone } from "lucide-react"
+import { Loader2, Save, User, MapPin, Briefcase, Users, Smartphone, Building2 } from "lucide-react"
 
 interface ApplicationFormProps {
   initialData?: AccountApplication
@@ -27,6 +27,9 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
   const [createdApplication, setCreatedApplication] = useState<AccountApplication | null>(null)
 
   const [formData, setFormData] = useState<Partial<AccountApplication>>({
+    branch_city: initialData?.branch_city ?? "",
+    branch_code: initialData?.branch_code ?? "",
+    sbp_code: initialData?.sbp_code ?? "",
     title_of_account: initialData?.title_of_account ?? "",
     name: initialData?.name ?? "",
     name_on_card: initialData?.name_on_card ?? "",
@@ -153,6 +156,54 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
       data={createdApplication}
     />
     <form onSubmit={handleSubmit} className="space-y-6">
+
+      {/* Branch Information */}
+      <Card className="bg-card border-border glow-card">
+        <CardHeader className="flex flex-row items-center gap-2 pb-4">
+          <div className="p-2 rounded-lg bg-cyan-500/10">
+            <Building2 className="h-5 w-5 text-cyan-400" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Branch Information</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+          <div className="space-y-2">
+            <Label htmlFor="branch_city" className="text-foreground text-sm">
+              Branch City
+            </Label>
+            <Input
+              id="branch_city"
+              value={formData.branch_city}
+              onChange={(e) => updateField("branch_city", e.target.value.toUpperCase())}
+              placeholder="KARACHI"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="branch_code" className="text-foreground text-sm">
+              Branch Code
+            </Label>
+            <Input
+              id="branch_code"
+              value={formData.branch_code}
+              onChange={(e) => updateField("branch_code", e.target.value.toUpperCase())}
+              placeholder="0001"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="sbp_code" className="text-foreground text-sm">
+              SBP Code
+            </Label>
+            <Input
+              id="sbp_code"
+              value={formData.sbp_code}
+              onChange={(e) => updateField("sbp_code", e.target.value.toUpperCase())}
+              placeholder="ABCD0001"
+              className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
+            />
+          </div>
+        </CardContent>
+      </Card>
 
       {/* Personal Information */}
       <Card className="bg-card border-border glow-card">
