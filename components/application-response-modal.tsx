@@ -106,6 +106,7 @@ export function ApplicationResponseModal({ isOpen, onClose, data }: ApplicationR
       color: "text-pink-400",
       bgColor: "bg-pink-500/10",
       fields: [
+        { label: "Has Next of Kin", key: "has_next_of_kin" },
         { label: "Name", key: "next_of_kin_name" },
         { label: "Relation", key: "next_of_kin_relation" },
         { label: "Relationship", key: "next_of_kin_relationship" },
@@ -125,8 +126,8 @@ export function ApplicationResponseModal({ isOpen, onClose, data }: ApplicationR
         { label: "Mobile Banking", key: "mobile_banking" },
         { label: "Check Book", key: "check_book" },
         { label: "SMS Alerts", key: "sms_alerts" },
-        { label: "Gold Card", key: "card_type_gold" },
-        { label: "Classic Card", key: "card_type_classic" },
+        { label: "Card Type", key: "card_type" },
+        { label: "Card Network", key: "card_network" },
         { label: "Zakat Deduction", key: "zakat_deduction" },
       ],
     },

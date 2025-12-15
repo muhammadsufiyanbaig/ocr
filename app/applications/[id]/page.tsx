@@ -289,12 +289,16 @@ export default function ApplicationDetailPage({
 
           {/* Next of Kin */}
           <Card className="mb-4 bg-card border-border glow-card">
-            <CardHeader className="flex flex-row items-center gap-2 pb-4">
-              <div className="p-2 rounded-lg bg-primary/10">
-                <Users className="h-5 w-5 text-primary" />
+            <CardHeader className="flex flex-row items-center justify-between pb-4">
+              <div className="flex items-center gap-2">
+                <div className="p-2 rounded-lg bg-primary/10">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <CardTitle className="text-card-foreground text-base">Next of Kin</CardTitle>
               </div>
-              <CardTitle className="text-card-foreground text-base">Next of Kin</CardTitle>
+              <BooleanItem label="Has Next of Kin" value={application.has_next_of_kin} />
             </CardHeader>
+            {application.has_next_of_kin && (
             <CardContent className="grid gap-4 grid-cols-2 md:grid-cols-3">
               <InfoItem label="Name" value={application.next_of_kin_name} />
               <InfoItem label="Relation" value={application.next_of_kin_relation} />
@@ -306,6 +310,7 @@ export default function ApplicationDetailPage({
                 <InfoItem label="Address" value={application.next_of_kin_address} />
               </div>
             </CardContent>
+            )}
           </Card>
 
           {/* Banking Services */}
@@ -322,8 +327,8 @@ export default function ApplicationDetailPage({
                 <BooleanItem label="Mobile Banking" value={application.mobile_banking} />
                 <BooleanItem label="Check Book" value={application.check_book} />
                 <BooleanItem label="SMS Alerts" value={application.sms_alerts} />
-                <BooleanItem label="Gold Card" value={application.card_type_gold} />
-                <BooleanItem label="Classic Card" value={application.card_type_classic} />
+                <InfoItem label="Card Type" value={application.card_type} />
+                <InfoItem label="Card Network" value={application.card_network} />
                 <BooleanItem label="Zakat Deduction" value={application.zakat_deduction} />
               </div>
             </CardContent>

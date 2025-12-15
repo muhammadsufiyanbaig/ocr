@@ -13,7 +13,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ApplicationResponseModal } from "@/components/application-response-modal"
-import { Loader2, Save, User, MapPin, Briefcase, Users, Smartphone, Building2 } from "lucide-react"
+import { Loader2, Save, User, MapPin, Briefcase, Users, Smartphone, Building2, CreditCard, Wallet } from "lucide-react"
 
 interface ApplicationFormProps {
   initialData?: AccountApplication
@@ -30,6 +30,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     branch_city: initialData?.branch_city ?? "",
     branch_code: initialData?.branch_code ?? "",
     sbp_code: initialData?.sbp_code ?? "",
+    account_type: initialData?.account_type ?? "SAVINGS",
     title_of_account: initialData?.title_of_account ?? "",
     name: initialData?.name ?? "",
     name_on_card: initialData?.name_on_card ?? "",
@@ -55,6 +56,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     residential_status: initialData?.residential_status ?? undefined,
     residential_status_other: initialData?.residential_status_other ?? "",
     residing_since: initialData?.residing_since ?? "",
+    has_next_of_kin: initialData?.has_next_of_kin ?? false,
     next_of_kin_name: initialData?.next_of_kin_name ?? "",
     next_of_kin_relation: initialData?.next_of_kin_relation ?? "",
     next_of_kin_cnic: initialData?.next_of_kin_cnic ?? "",
@@ -66,8 +68,8 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     mobile_banking: initialData?.mobile_banking ?? false,
     check_book: initialData?.check_book ?? false,
     sms_alerts: initialData?.sms_alerts ?? false,
-    card_type_gold: initialData?.card_type_gold ?? false,
-    card_type_classic: initialData?.card_type_classic ?? false,
+    card_type: initialData?.card_type ?? undefined,
+    card_network: initialData?.card_network ?? undefined,
     zakat_deduction: initialData?.zakat_deduction ?? false,
   })
 
@@ -102,6 +104,14 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     cleaned.date_of_birth = formatDateForApi(data.date_of_birth) ?? undefined
     cleaned.cnic_expiry_date = formatDateForApi(data.cnic_expiry_date) ?? undefined
     cleaned.residing_since = formatDateForApi(data.residing_since) ?? undefined
+    
+    // Handle card_type "none" value
+    if ((data.card_type as string) === "none" || !data.card_type) {
+      cleaned.card_type = null
+    }
+    
+    // Ensure has_next_of_kin is set
+    cleaned.has_next_of_kin = data.has_next_of_kin ?? false
     
     return cleaned
   }
@@ -157,15 +167,33 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
     />
     <form onSubmit={handleSubmit} className="space-y-6">
 
-      {/* Branch Information */}
+      {/* Branch & Account Information */}
       <Card className="bg-card border-border glow-card">
         <CardHeader className="flex flex-row items-center gap-2 pb-4">
           <div className="p-2 rounded-lg bg-cyan-500/10">
             <Building2 className="h-5 w-5 text-cyan-400" />
           </div>
-          <CardTitle className="text-card-foreground text-base">Branch Information</CardTitle>
+          <CardTitle className="text-card-foreground text-base">Branch & Account Information</CardTitle>
         </CardHeader>
-        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-3">
+        <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="space-y-2">
+            <Label className="text-foreground text-sm">
+              Account Type *
+            </Label>
+            <Select 
+              value={formData.account_type} 
+              onValueChange={(value) => updateField("account_type", value)}
+            >
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
+                <SelectValue placeholder="Select account type" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border">
+                <SelectItem value="CURRENT">Current Account</SelectItem>
+                <SelectItem value="SAVINGS">Savings Account</SelectItem>
+                <SelectItem value="AHU_LAT">Ahu Lat Account</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
           <div className="space-y-2">
             <Label htmlFor="branch_city" className="text-foreground text-sm">
               Branch City
@@ -472,12 +500,23 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
                 <SelectValue placeholder="Select occupation" />
               </SelectTrigger>
-              <SelectContent className="bg-popover border-border">
+              <SelectContent className="bg-popover border-border max-h-[280px]">
                 <SelectItem value="SERVICE_GOVT">Government Service</SelectItem>
                 <SelectItem value="SERVICE_PRIVATE">Private Service</SelectItem>
+                <SelectItem value="BUSINESS">Business</SelectItem>
+                <SelectItem value="SELF_EMPLOYED">Self Employed</SelectItem>
                 <SelectItem value="FARMER">Farmer</SelectItem>
                 <SelectItem value="HOUSE_WIFE">House Wife</SelectItem>
                 <SelectItem value="STUDENT">Student</SelectItem>
+                <SelectItem value="RETIRED">Retired</SelectItem>
+                <SelectItem value="DOCTOR">Doctor</SelectItem>
+                <SelectItem value="ENGINEER">Engineer</SelectItem>
+                <SelectItem value="TEACHER">Teacher</SelectItem>
+                <SelectItem value="LAWYER">Lawyer</SelectItem>
+                <SelectItem value="ACCOUNTANT">Accountant</SelectItem>
+                <SelectItem value="IT_PROFESSIONAL">IT Professional</SelectItem>
+                <SelectItem value="BANKER">Banker</SelectItem>
+                <SelectItem value="UNEMPLOYED">Unemployed</SelectItem>
                 <SelectItem value="OTHER">Other</SelectItem>
               </SelectContent>
             </Select>
@@ -535,46 +574,63 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
 
       {/* Next of Kin */}
       <Card className="bg-card border-border glow-card">
-        <CardHeader className="flex flex-row items-center gap-2 pb-4">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <Users className="h-5 w-5 text-primary" />
+        <CardHeader className="flex flex-row items-center justify-between pb-4">
+          <div className="flex items-center gap-2">
+            <div className="p-2 rounded-lg bg-primary/10">
+              <Users className="h-5 w-5 text-primary" />
+            </div>
+            <CardTitle className="text-card-foreground text-base">Next of Kin Information</CardTitle>
           </div>
-          <CardTitle className="text-card-foreground text-base">Next of Kin Information</CardTitle>
+          <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30">
+            <Checkbox
+              id="has_next_of_kin"
+              checked={formData.has_next_of_kin}
+              onCheckedChange={(checked) => updateField("has_next_of_kin", checked)}
+              className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
+            />
+            <Label htmlFor="has_next_of_kin" className="cursor-pointer text-foreground text-sm">
+              Add Next of Kin
+            </Label>
+          </div>
         </CardHeader>
+        {formData.has_next_of_kin && (
         <CardContent className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           <div className="space-y-2">
             <Label htmlFor="next_of_kin_name" className="text-foreground text-sm">
-              Name
+              Name *
             </Label>
             <Input
               id="next_of_kin_name"
               value={formData.next_of_kin_name}
               onChange={(e) => updateField("next_of_kin_name", e.target.value.toUpperCase())}
               placeholder="JANE DOE"
+              required={formData.has_next_of_kin}
               className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="next_of_kin_relation" className="text-foreground text-sm">
-              Relation (S/W/D/O)
+              Relation (S/W/D/O) *
             </Label>
             <Input
               id="next_of_kin_relation"
               value={formData.next_of_kin_relation}
               onChange={(e) => updateField("next_of_kin_relation", e.target.value.toUpperCase())}
               placeholder="S/O"
+              required={formData.has_next_of_kin}
               className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
           <div className="space-y-2">
             <Label htmlFor="next_of_kin_cnic" className="text-foreground text-sm">
-              CNIC
+              CNIC *
             </Label>
             <Input
               id="next_of_kin_cnic"
               value={formData.next_of_kin_cnic}
               onChange={(e) => updateField("next_of_kin_cnic", e.target.value)}
               placeholder="12345-1234567-2"
+              required={formData.has_next_of_kin}
               className="bg-input border-border text-foreground placeholder:text-muted-foreground rounded-xl h-11"
             />
           </div>
@@ -628,6 +684,7 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             />
           </div>
         </CardContent>
+        )}
       </Card>
 
       {/* Services */}
@@ -638,8 +695,9 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
           </div>
           <CardTitle className="text-card-foreground text-base">Banking Services</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-4">
+        <CardContent className="space-y-6">
+          {/* Digital Banking Services */}
+          <div className="grid gap-4 grid-cols-2 sm:grid-cols-3 lg:grid-cols-5">
             <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
                 id="internet_banking"
@@ -686,28 +744,6 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
             </div>
             <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
               <Checkbox
-                id="card_type_gold"
-                checked={formData.card_type_gold}
-                onCheckedChange={(checked) => updateField("card_type_gold", checked)}
-                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-              />
-              <Label htmlFor="card_type_gold" className="cursor-pointer text-foreground text-sm">
-                Gold Card
-              </Label>
-            </div>
-            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
-              <Checkbox
-                id="card_type_classic"
-                checked={formData.card_type_classic}
-                onCheckedChange={(checked) => updateField("card_type_classic", checked)}
-                className="data-[state=checked]:bg-primary data-[state=checked]:border-primary"
-              />
-              <Label htmlFor="card_type_classic" className="cursor-pointer text-foreground text-sm">
-                Classic Card
-              </Label>
-            </div>
-            <div className="flex items-center space-x-3 p-3 rounded-xl bg-secondary/30 hover:bg-secondary/50 transition-colors">
-              <Checkbox
                 id="zakat_deduction"
                 checked={formData.zakat_deduction}
                 onCheckedChange={(checked) => updateField("zakat_deduction", checked)}
@@ -716,6 +752,72 @@ export function ApplicationForm({ initialData, isEditing = false }: ApplicationF
               <Label htmlFor="zakat_deduction" className="cursor-pointer text-foreground text-sm">
                 Zakat Deduction
               </Label>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Card Selection */}
+      <Card className="bg-card border-border glow-card">
+        <CardHeader className="flex flex-row items-center gap-2 pb-4">
+          <div className="p-2 rounded-lg bg-amber-500/10">
+            <CreditCard className="h-5 w-5 text-amber-400" />
+          </div>
+          <CardTitle className="text-card-foreground text-base">Card Selection</CardTitle>
+        </CardHeader>
+        <CardContent className="grid gap-6 grid-cols-1 sm:grid-cols-2">
+          {/* Card Type Dropdown */}
+          <div className="space-y-2">
+            <Label className="text-foreground text-sm">Card Type</Label>
+            <Select 
+              value={formData.card_type || ""} 
+              onValueChange={(value) => updateField("card_type", value || null)}
+            >
+              <SelectTrigger className="bg-input border-border text-foreground rounded-xl h-11">
+                <SelectValue placeholder="Select card type (optional)" />
+              </SelectTrigger>
+              <SelectContent className="bg-popover border-border">
+                <SelectItem value="none">No Card</SelectItem>
+                <SelectItem value="CLASSIC">Classic</SelectItem>
+                <SelectItem value="GOLD">Gold</SelectItem>
+                <SelectItem value="TITANIUM">Titanium</SelectItem>
+                <SelectItem value="PLATINUM">Platinum</SelectItem>
+                <SelectItem value="SIGNATURE">Signature</SelectItem>
+                <SelectItem value="INFINITE">Infinite</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Card Network Selection */}
+          <div className="space-y-3">
+            <Label className="text-foreground text-sm">Card Network</Label>
+            <div className="flex gap-4">
+              <div 
+                className={`flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  formData.card_network === "VISA" 
+                    ? "border-blue-500 bg-blue-500/10" 
+                    : "border-border bg-secondary/30 hover:bg-secondary/50"
+                }`}
+                onClick={() => updateField("card_network", formData.card_network === "VISA" ? null : "VISA")}
+              >
+                <Wallet className={`h-5 w-5 ${formData.card_network === "VISA" ? "text-blue-400" : "text-muted-foreground"}`} />
+                <span className={`font-medium ${formData.card_network === "VISA" ? "text-blue-400" : "text-foreground"}`}>
+                  VISA
+                </span>
+              </div>
+              <div 
+                className={`flex-1 flex items-center justify-center gap-2 p-4 rounded-xl border-2 cursor-pointer transition-all ${
+                  formData.card_network === "MASTERCARD" 
+                    ? "border-orange-500 bg-orange-500/10" 
+                    : "border-border bg-secondary/30 hover:bg-secondary/50"
+                }`}
+                onClick={() => updateField("card_network", formData.card_network === "MASTERCARD" ? null : "MASTERCARD")}
+              >
+                <Wallet className={`h-5 w-5 ${formData.card_network === "MASTERCARD" ? "text-orange-400" : "text-muted-foreground"}`} />
+                <span className={`font-medium ${formData.card_network === "MASTERCARD" ? "text-orange-400" : "text-foreground"}`}>
+                  Mastercard
+                </span>
+              </div>
             </div>
           </div>
         </CardContent>

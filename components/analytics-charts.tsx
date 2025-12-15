@@ -199,16 +199,31 @@ export function AnalyticsCharts({ applications }: AnalyticsChartsProps) {
       },
     ]
 
-    // Card Type Preference
-    const goldCards = applications.filter(a => a.card_type_gold).length
-    const classicCards = applications.filter(a => a.card_type_classic).length
-    const noCard = applications.length - Math.max(goldCards, classicCards)
+    // Card Type Preference (new single card_type field)
+    const cardTypeCounts = applications.reduce((acc, app) => {
+      const cardType = app.card_type || "NO_CARD"
+      acc[cardType] = (acc[cardType] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
 
-    const cardTypeData = [
-      { name: "Gold Card", value: goldCards, color: COLORS.warning },
-      { name: "Classic Card", value: classicCards, color: COLORS.secondary },
-      { name: "No Card", value: noCard, color: COLORS.muted },
-    ]
+    const cardTypeData = Object.entries(cardTypeCounts).map(([name, value], i) => ({
+      name: name === "NO_CARD" ? "No Card" : name.charAt(0) + name.slice(1).toLowerCase(),
+      value,
+      color: CHART_COLORS[i % CHART_COLORS.length],
+    }))
+
+    // Card Network Distribution
+    const cardNetworkCounts = applications.reduce((acc, app) => {
+      const network = app.card_network || "NO_CARD"
+      acc[network] = (acc[network] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+
+    const cardNetworkData = Object.entries(cardNetworkCounts).map(([name, value], i) => ({
+      name: name === "NO_CARD" ? "No Card" : name,
+      value,
+      color: CHART_COLORS[i % CHART_COLORS.length],
+    }))
 
     // Financial Radar (based on expected turnovers)
     const avgDebit = applications.reduce((sum, a) => sum + (a.expected_monthly_turnover_dr || 0), 0) / applications.length
@@ -263,6 +278,7 @@ export function AnalyticsCharts({ applications }: AnalyticsChartsProps) {
       residentialData,
       servicesData,
       cardTypeData,
+      cardNetworkData,
       financialRadarData,
       branchData,
       monthlyData,
@@ -384,9 +400,9 @@ export function AnalyticsCharts({ applications }: AnalyticsChartsProps) {
             </div>
             <div>
               <CardTitle className="text-sm font-semibold text-card-foreground">
-                Card Preferences
+                Card Types
               </CardTitle>
-              <CardDescription className="text-xs">Gold vs Classic cards</CardDescription>
+              <CardDescription className="text-xs">Distribution by card tier</CardDescription>
             </div>
           </CardHeader>
           <CardContent>
